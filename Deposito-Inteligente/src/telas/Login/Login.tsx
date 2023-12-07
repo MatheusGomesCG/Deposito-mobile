@@ -5,15 +5,24 @@ import styles from './Styles';
 import { useState } from 'react';
 
 const Login = ({navigation}: any) => {
+    const func1 = ({name, data}: any) => {
+
+    }
+    func1({name:"admin", data: "admin123"})
+    
     const [isPassword, setIsPassword] = useState(true)
 
-    let [fontsLoaded, fontError] = useFonts({
+    const [fontsLoaded, fontError] = useFonts({
         Montserrat_400Regular,
         Montserrat_700Bold,
     });
     
     if (!fontsLoaded && !fontError) {
         return null;
+    }
+
+    const goToPage = (path : String) => {
+        navigation.navigate(path)
     }
     return (
         <View style={styles.container}>
@@ -35,14 +44,14 @@ const Login = ({navigation}: any) => {
                 </TouchableOpacity>                
             </View>
             <View style={styles.createForgotLink}>
-                <TouchableOpacity style={styles.link} onPress={() => {navigation.navigate("CriarUsuario")}}>
+                <TouchableOpacity style={styles.link} onPress={() => {goToPage("CriarUsuario")}}>
                     <Text style={styles.textLink}>Criar Conta</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.link} onPress={() => {navigation.navigate("EsqueceuSenha")}}>
+                <TouchableOpacity style={styles.link} onPress={() => {goToPage("EsqueceuSenha")}}>
                     <Text style={styles.textLink}>Esqueceu a senha?</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity onPress={() => {goToPage("Home")}} style={styles.button}>
                 <Text style={styles.texto}>Entrar</Text>
             </TouchableOpacity>
         </View>
