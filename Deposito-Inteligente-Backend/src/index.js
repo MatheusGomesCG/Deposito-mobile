@@ -1,22 +1,22 @@
-'use strict'
+'use strict';
 
-require('dotenv').config()
+require('dotenv').config();
 
-const mongoose = require('mongoose')
-mongoose.connect('mongodb://127.0.0.1:27017/deposito')
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://127.0.0.1:27017/deposito');
 
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
 
-const PORT = process.env.port || 3000
+const PORT = process.env.PORT || 3000;
 
-const userRouter = require('../src/routers/userRouter')
-const productRouter = require('../src/routers/productRouter')
+const productRouter = require('../src/routers/productRouter');
+const userRouter = require('../src/routers/userRouter');
 
-app.use(express.json())
-app.use(userRouter)
-app.use(productRouter)
+app.use(express.json());
+app.use(productRouter);
+app.use(userRouter);
 
 app.listen(PORT, () => {
-    console.log('Seu servidor está online na porta', PORT)
-})
+    console.log('Seu servidor está online na porta', PORT);
+});
