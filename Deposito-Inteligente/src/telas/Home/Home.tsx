@@ -12,11 +12,11 @@ const Home = ({navigation}: any) => {
             style={styles.logo}
             source={require('../../../assets/Foto/Logo.png')}
       />
-      <View>
+      {/* <View>
         <TouchableOpacity style={styles.button} onPress={() => {goToPage("CadastrarProduto")}}>
           <Text style={styles.textLink}>Cadastrar Material</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View>
         <TouchableOpacity style={styles.button} onPress={() => {goToPage("ListarProduto")}}>
           <Text style={styles.textLink}>Listar Itens</Text>

@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   inputQuantity: {
-    width: 100,
+    width: 50,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
@@ -68,15 +68,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
   },
-  textInput:{
-    flexDirection: 'row',
-  },
-  textQuantity: {
-    paddingTop: 10,
-    paddingRight: "5%",
-    fontSize: 16,
-    fontWeight: 'bold',
-  }
 });
 
 export default styles;
