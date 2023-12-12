@@ -24,7 +24,7 @@ const createUser = async (req, res) => {
 module.exports = {
     login: async (req, res) => {
         try {
-            const result = await UserModel.findOne({ cpf: req.body.cpf, password: req.body.password });
+            const result = await UserModel.findOne({ login: req.body.login, password: req.body.password });
             if (result) {
                 const secret = process.env.secret;
                 const tokenResult = await jwtService.sign(req.body, secret);

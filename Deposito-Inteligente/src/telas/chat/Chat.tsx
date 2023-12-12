@@ -7,7 +7,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Style from './ChatStyle'
 import Socket from 'socket.io-client'
 
-const io = Socket('http://localhost:3000')
+const io = Socket('http://192.168.1.11:3000')
 const Chat = () => {
     const sendMessage = () => {
         io.emit('chat', {content: text, date: new Date(), sentBy: userData.name })

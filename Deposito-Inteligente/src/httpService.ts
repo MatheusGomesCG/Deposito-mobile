@@ -1,6 +1,6 @@
 const httpService = {
     login: (data: any) => {
-        return fetch("http://localhost:3000/api/user/auth",
+        return fetch("http://192.168.1.11:3000/api/user/auth",
         {
             method: "POST",
             headers: {
@@ -10,7 +10,7 @@ const httpService = {
         })
     },
     createUser: (data: any) => {
-        return fetch("http://localhost:3000/api/user",
+        return fetch("http://192.168.1.11:3000/api/user",
         {
             method:"POST",
             headers: {

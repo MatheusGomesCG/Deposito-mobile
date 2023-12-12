@@ -1,28 +1,20 @@
 import React, { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
+import httpService from '../../httpService';
 import styles from './Styles';
 
-export const CriarUsuario = ({ navigation }: any) => {
-  const [nome, setNome] = useState('');
+export const CriarUsuario = () => {
+  const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [password, setPassword] = useState('');
 
   const cadastrarUsuario = async () => {
     try {
-      const resposta = await fetch('http://localhost:3000/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          nome,
-          email,
-          senha,
-        }),
-      });
+      const data = { login, email, password };
+      const resposta = await httpService.createUser(data);
 
       if (resposta.ok) {
-        navigation.navigate('Login');
+        Alert.alert('Usuário criado com sucesso!')
       } else {
         const erroData = await resposta.json();
         Alert.alert('Erro', erroData.message);
@@ -36,11 +28,11 @@ export const CriarUsuario = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
       <View>
-        <Text style={styles.texto}>Nome Completo</Text>
+        <Text style={styles.texto}>Login</Text>
         <TextInput
           style={[styles.input, styles.textInput]}
-          value={nome}
-          onChangeText={setNome}
+          value={login}
+          onChangeText={setLogin}
         />
         <Text style={styles.texto}>E-mail</Text>
         <TextInput
@@ -51,8 +43,8 @@ export const CriarUsuario = ({ navigation }: any) => {
         <Text style={styles.texto}>Senha</Text>
         <TextInput
           style={[styles.input, styles.textInput]}
-          value={senha}
-          onChangeText={setSenha}
+          value={password}
+          onChangeText={setPassword}
           secureTextEntry
         />
         <TouchableOpacity style={styles.button} onPress={cadastrarUsuario}>

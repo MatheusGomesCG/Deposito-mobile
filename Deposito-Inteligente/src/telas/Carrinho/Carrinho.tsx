@@ -24,7 +24,7 @@ const Carrinho = ({ route, shoppingcart, setShoppingCart }: any) => {
   const handleFinalizarCarrinho = async () => {
     try {
         // Substitua a URL pelo endpoint correto do seu back-end
-        const resultado = await fetch('http://localhost:3000/api/finalizarCompra', {
+        const resultado = await fetch('http://192.168.1.11:3000/api/finalizarCompra', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

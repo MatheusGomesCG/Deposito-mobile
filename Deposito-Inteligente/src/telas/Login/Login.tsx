@@ -5,7 +5,6 @@ import styles from './Styles';
 import { useState } from 'react';
 import httpService from '../../httpService';
 import storageService from '../../storageService';
-import { Button } from 'react-native-elements';
 
 const Login = ({navigation}: any) => {
 
