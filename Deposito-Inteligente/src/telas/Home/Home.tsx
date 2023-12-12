@@ -1,12 +1,17 @@
 import React from 'react'
 import { Image ,Text, TouchableOpacity, View } from 'react-native';
 import styles from './HomeStyle'
+import { FAB } from '@rneui/themed';
 
 const Home = ({navigation}: any) => {
+  const openChat = () => {
+    navigation.navigate('chat')
+  }
   const goToPage = (path : String) => {
     navigation.navigate(path)
   }
   return(
+    <>
     <View style={styles.container}>
         <Image
             style={styles.logo}
@@ -43,6 +48,14 @@ const Home = ({navigation}: any) => {
         </TouchableOpacity>
       </View> */}
     </View>
+    <FAB 
+    visible={true}
+    icon = {{name:'chat', color: 'white'}}
+    style={styles.fab}
+    color= 'green'
+    onPress={() => {openChat()}}
+    />
+    </>
   );
 }
 

@@ -12,4 +12,7 @@ productRouter.route('/api/product/:code')
 productRouter.route('api/product/avatar')
 .post((req, res) => productController.changeAvatar(req, res))
 
-module.exports = productRouter
+productRouter.route('/api/products/finalize-cart')
+.post(productController.finalizeCart);
+
+module.exports = productRouter;

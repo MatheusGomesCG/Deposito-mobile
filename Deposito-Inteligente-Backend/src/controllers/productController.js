@@ -2,6 +2,26 @@ const fs = require('fs');
 
 const productModel = require('../models/productModel');
 
+const finalizeCart = async (req, res) => {
+    try {
+        const cartItems = req.body.cartItems; // Supõe-se que cartItems é um array de objetos { productId, quantity }
+
+        for (const item of cartItems) {
+            const product = await ProductModel.findById(item.productId);
+            if (product) {
+                product.quantity -= item.quantity;
+                await product.save();
+            } else {
+                return res.status(404).json({ message: `Produto com ID ${item.productId} não encontrado` });
+            }
+        }
+
+        res.status(200).json({ message: 'Carrinho finalizado com sucesso' });
+    } catch (err) {
+        res.status(500).json({ message: 'Erro ao finalizar carrinho', error: err });
+    }
+};
+
 const productController = {
     changeAvatar: async (req, res) => {
         try {
@@ -50,7 +70,8 @@ const productController = {
             console.error(error);
             res.status(500).json({ message: 'Erro ao recuperar produto' });
         }
-    }
+    },
+    finalizeCart,
 };
 
 module.exports = productController;

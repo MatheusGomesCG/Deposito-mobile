@@ -21,6 +21,29 @@ const Carrinho = ({ route, shoppingcart, setShoppingCart }: any) => {
     setShoppingCart(updatedShoppingCart);
   }, [updatedShoppingCart, setShoppingCart]);
 
+  const handleFinalizarCarrinho = async () => {
+    try {
+        // Substitua a URL pelo endpoint correto do seu back-end
+        const resultado = await fetch('http://localhost:3000/api/finalizarCompra', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedShoppingCart),
+        });
+
+        if (resultado.ok) {
+            setUpdatedShoppingCart([]);
+            openToast('Compra finalizada com sucesso!');
+        } else {
+            openToast('Erro ao finalizar a compra');
+        }
+    } catch (error) {
+        console.error('Erro ao finalizar compra:', error);
+        openToast('Erro ao conectar ao servidor');
+    }
+};
+
   return (
     <ScrollView style={styles.container}>
       {updatedShoppingCart.map((product: any, i: number) => (
@@ -51,6 +74,11 @@ const Carrinho = ({ route, shoppingcart, setShoppingCart }: any) => {
           </View>
         </Card>
       ))}
+      <TouchableOpacity
+        onPress={handleFinalizarCarrinho}
+        style={styles.cardButton}>
+          <Text style={styles.buttonText}>Finalizar Compra</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };

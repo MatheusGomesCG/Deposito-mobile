@@ -24,6 +24,11 @@ const styles = StyleSheet.create({
     logo: {
         marginBottom: "3%",
     },
+    fab: {
+        position: "absolute",
+        bottom: 30,
+        right: 30,
+    },
 });
 
 export default styles;

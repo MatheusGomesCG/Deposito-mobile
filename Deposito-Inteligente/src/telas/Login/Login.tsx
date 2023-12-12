@@ -1,10 +1,33 @@
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import { FontAwesome5 } from '@expo/vector-icons'
 import styles from './Styles';
 import { useState } from 'react';
+import httpService from '../../httpService';
+import storageService from '../../storageService';
+import { Button } from 'react-native-elements';
 
 const Login = ({navigation}: any) => {
+
+    const [login, setLogin] = useState('')
+    const [password, setPassword] = useState('')
+    const onSubmit = async () => {
+        try {
+            const result = await httpService.login({ login, password });
+            const data = await result.json();
+    
+            if (result.status === 200) {
+                storageService.set('userData', data.userData);
+                goToPage("Home");
+                ToastAndroid.show(data.message, 5000);
+            } else {
+                ToastAndroid.show(data.message, 5000);
+            }
+        } catch (e) {
+            ToastAndroid.show('Não foi possível logar no sistema. Tente novamente mais tarde', 5000);
+        }
+    };    
+
     const func1 = ({name, data}: any) => {
 
     }
@@ -31,10 +54,19 @@ const Login = ({navigation}: any) => {
             source={require('../../../assets/Foto/Logo.png')}
             />
             <Text style={styles.texto}>Usuário</Text>
-            <TextInput style={[styles.input, styles.textInput]}/>
+            <TextInput 
+                style={[styles.input, styles.textInput]}
+                value={login}
+                onChangeText={setLogin}
+            />
             <Text style={styles.texto}>Senha</Text> 
             <View style={styles.viewPassword}>
-                <TextInput secureTextEntry={isPassword} style={[styles.textInput, styles.withInput]}/>
+            <TextInput 
+                secureTextEntry={isPassword} 
+                style={[styles.textInput, styles.withInput]}
+                value={password}
+                onChangeText={setPassword}
+            />
                 <TouchableOpacity onPress={() => setIsPassword(!isPassword)}>
                     {isPassword == true ?
                         <FontAwesome5 name="eye-slash" size={24} color="#FFF" style={styles.eye}/>
@@ -51,10 +83,11 @@ const Login = ({navigation}: any) => {
                     <Text style={styles.textLink}>Esqueceu a senha?</Text>
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={() => {goToPage("Home")}} style={styles.button}>
+            <TouchableOpacity onPress={onSubmit} style={styles.button}>
                 <Text style={styles.texto}>Entrar</Text>
             </TouchableOpacity>
         </View>
+        //onPress={() => {onSubmit()}}
     );
 }
 

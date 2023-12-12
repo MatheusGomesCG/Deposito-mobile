@@ -11,6 +11,7 @@ import ListarProduto from './src/telas/ListarProdutos/Listar';
 import CadastrarProduto from './src/telas/CadastrarProduto/CadastrarProduto';
 import Carrinho from './src/telas/Carrinho/Carrinho';
 import Favoritos from './src/telas/Favoritos/Favoritos';
+import Chat from './src/telas/chat/Chat';
 
 const App = (): JSX.Element => {
   const Stack = createNativeStackNavigator();
@@ -122,6 +123,9 @@ const App = (): JSX.Element => {
           name="Favoritos"
         >
           {() => <Favoritos favorites={favorites} setFavorites={setFavorites} setShoppingCart={setShoppingCart} />}
+        </Stack.Screen>
+        <Stack.Screen
+        name="chat" component={Chat}>
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
