@@ -11,7 +11,8 @@ userRouter.route('/api/user/:email')
     .put((req, res) => userController.update(req, res))
     .delete((req, res) => userController.deleteUserById(req, res));
 
+// Rota para login
 userRouter.route('/api/user/auth')
-    .post((req, res) => userController.login(req, res));
+    .post((req, res) => userController.loginUser(req, res));
 
 module.exports = userRouter;

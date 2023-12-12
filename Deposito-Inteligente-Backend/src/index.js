@@ -12,6 +12,8 @@ const server = http.createServer(app)
 const socketIo = require('socket.io')
 const io = socketIo(server, {})
 
+require('dotenv').config();
+
 io.on('connection', (socket) => {
     socket.on('chat', (msg) => {
         io.emit('chat', msg)

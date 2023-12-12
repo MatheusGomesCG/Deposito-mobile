@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Image, Text, TouchableOpacity, ToastAndroid } from 'react-native';
 import { Card } from 'react-native-elements';
 import styles from './CarrinhoStyle';
+import httpService from '../../httpService';
 
 const Carrinho = ({ route, shoppingcart, setShoppingCart }: any) => {
   const { params } = route;
@@ -23,24 +24,16 @@ const Carrinho = ({ route, shoppingcart, setShoppingCart }: any) => {
 
   const handleFinalizarCarrinho = async () => {
     try {
-        // Substitua a URL pelo endpoint correto do seu back-end
-        const resultado = await fetch('http://192.168.1.11:3000/api/finalizarCompra', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(updatedShoppingCart),
-        });
+        const response = await httpService.finalizarCompra(updatedShoppingCart);
 
-        if (resultado.ok) {
+        if (response.ok) {
             setUpdatedShoppingCart([]);
-            openToast('Compra finalizada com sucesso!');
+            ToastAndroid.show('Compra finalizada com sucesso!', ToastAndroid.SHORT);
         } else {
-            openToast('Erro ao finalizar a compra');
+            ToastAndroid.show('Erro ao finalizar a compra', ToastAndroid.SHORT);
         }
     } catch (error) {
-        console.error('Erro ao finalizar compra:', error);
-        openToast('Erro ao conectar ao servidor');
+        ToastAndroid.show('Erro de conexão', ToastAndroid.SHORT);
     }
 };
 

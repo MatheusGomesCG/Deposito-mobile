@@ -1,5 +1,6 @@
 const UserModel = require('../models/userModel');
-const jwtService = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const handleError = (res, status, message) => {
     res.status(status).json({ message });
@@ -18,6 +19,29 @@ const createUser = async (req, res) => {
         }
     } catch (err) {
         handleError(res, 403, 'Não foi possível criar o usuário');
+    }
+};
+
+const loginUser = async (req, res) => {
+    try {
+        const { login, password } = req.body;
+        const user = await UserModel.findOne({ login });
+
+        if (!user) {
+            return handleError(res, 401, 'Usuário não encontrado');
+        }
+
+        // Aqui, você deve verificar a senha. Exemplo: se (user.password !== password)
+        if (user.password !== password) {
+            return handleError(res, 401, 'Senha incorreta');
+        }
+
+        // Gerar o token JWT
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '1h' });
+
+        res.json({ message: 'Login bem-sucedido', token });
+    } catch (error) {
+        handleError(res, 500, 'Erro no servidor');
     }
 };
 
@@ -84,4 +108,5 @@ module.exports = {
             handleError(res, 500, 'Erro ao atualizar usuário');
         }
     },
+    loginUser,
 };

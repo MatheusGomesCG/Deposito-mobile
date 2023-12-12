@@ -4,21 +4,27 @@ const productModel = require('../models/productModel');
 
 const finalizeCart = async (req, res) => {
     try {
-        const cartItems = req.body.cartItems; // Supõe-se que cartItems é um array de objetos { productId, quantity }
+        const cartItems = req.body; // Supondo que cartItems seja um array de objetos { productId, quantity }
 
         for (const item of cartItems) {
             const product = await ProductModel.findById(item.productId);
             if (product) {
+                // Verifica se há quantidade suficiente
+                if (product.quantity < item.quantity) {
+                    return res.status(400).json({ message: "Quantidade insuficiente em estoque para o produto " + product.name });
+                }
+
+                // Atualiza a quantidade do produto
                 product.quantity -= item.quantity;
                 await product.save();
             } else {
-                return res.status(404).json({ message: `Produto com ID ${item.productId} não encontrado` });
+                return res.status(404).json({ message: "Produto não encontrado: " + item.productId });
             }
         }
 
-        res.status(200).json({ message: 'Carrinho finalizado com sucesso' });
-    } catch (err) {
-        res.status(500).json({ message: 'Erro ao finalizar carrinho', error: err });
+        res.status(200).json({ message: 'Compra finalizada com sucesso!' });
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao processar a compra', error: error.message });
     }
 };
 
