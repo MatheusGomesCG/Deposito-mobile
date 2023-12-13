@@ -2,6 +2,15 @@ const fs = require('fs');
 
 const productModel = require('../models/productModel');
 
+const search = async (req, res) => {
+    try {
+        const results = await ProductModel.find({});
+        res.status(200).json(results);
+    } catch (error) {
+        res.status(500).json({ message: 'Erro ao buscar produtos', error: error.message });
+    }
+};
+
 const productController = {
     changeAvatar: async (req, res) => {
         try {

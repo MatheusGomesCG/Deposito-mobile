@@ -1,30 +1,65 @@
 const UserModel = require('../models/userModel');
-const jwtService = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
+// Função para manipular erros
 const handleError = (res, status, message) => {
     res.status(status).json({ message });
 };
 
 const createUser = async (req, res) => {
     try {
-        const { login, email } = req.body;
-        const findResult = await UserModel.findOne({ $or: [{ login }, { email }] });
+        const { name, email, password} = req.body;
 
-        if (findResult) {
-            handleError(res, 409, 'Usuário já existe');
-        } else {
-            const createResult = await UserModel.create(req.body);
-            res.status(201).json({ message: `O usuário ${createResult._doc.login} foi criado com sucesso!` });
+        if (!name || !email || !password) {
+            return res.status(400).json({ message: 'Por favor, preencha todos os campos obrigatórios' });
         }
-    } catch (err) {
-        handleError(res, 403, 'Não foi possível criar o usuário');
+
+        // Verifique se o usuário já existe com base no email
+        const existingUser = await userModel.findOne({ email });
+
+        if (existingUser) {
+            return res.status(400).json({ message: 'Já existe um usuário com este email' });
+        }
+
+        // Crie um novo usuário
+        const newUser = new userModel({ name, email, password });
+        await newUser.save();
+
+        res.status(201).json({ message: 'Usuário criado com sucesso' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erro ao processar a solicitação' });
+    }
+};
+
+const loginUser = async (req, res) => {
+    try {
+        const { login, password } = req.body;
+        const user = await UserModel.findOne({ login });
+
+        if (!user) {
+            return handleError(res, 401, 'Usuário não encontrado');
+        }
+
+        // Aqui, você deve verificar a senha. Exemplo: se (user.password !== password)
+        if (user.password !== password) {
+            return handleError(res, 401, 'Senha incorreta');
+        }
+
+        // Gerar o token JWT
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '1h' });
+
+        res.json({ message: 'Login bem-sucedido', token });
+    } catch (error) {
+        handleError(res, 500, 'Erro no servidor');
     }
 };
 
 module.exports = {
     login: async (req, res) => {
         try {
-            const result = await UserModel.findOne({ cpf: req.body.cpf, password: req.body.password });
+            const result = await UserModel.findOne({ login: req.body.login, password: req.body.password });
             if (result) {
                 const secret = process.env.secret;
                 const tokenResult = await jwtService.sign(req.body, secret);
@@ -60,6 +95,7 @@ module.exports = {
         }
     },
     createUser,
+    loginUser,
     search: async (req, res) => {
         try {
             const result = await UserModel.findOne({ email: req.params.email });
