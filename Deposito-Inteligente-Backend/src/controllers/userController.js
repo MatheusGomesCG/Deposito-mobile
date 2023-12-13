@@ -7,6 +7,37 @@ const handleError = (res, status, message) => {
     res.status(status).json({ message });
 };
 
+const recuperarSenha = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await userModel.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ message: 'E-mail não encontrado' });
+        }
+
+        // Gerar um token seguro
+        const resetToken = crypto.randomBytes(20).toString('hex');
+        // Gerar um JWT com data de expiração
+        const resetTokenJWT = jwt.sign({ id: user._id, token: resetToken }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+        // Salvar o token e a data de validade no banco de dados
+        user.resetPasswordToken = resetTokenJWT;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hora
+        await user.save();
+
+        // URL para redefinição de senha (ajuste conforme necessário)
+        const resetUrl = `http://frontend-url/reset-password/${resetTokenJWT}`;
+
+        // Envie o e-mail com o link (implementação do NodeMailer como antes)
+
+        res.status(200).json({ message: 'E-mail de recuperação enviado' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Erro ao processar a solicitação' });
+    }
+};
+
 const createUser = async (req, res) => {
     try {
         const { login, email, password} = req.body;
@@ -92,6 +123,7 @@ module.exports = {
     },
     createUser,
     loginUser,
+    recuperarSenha,
     search: async (req, res) => {
         try {
             const result = await UserModel.findOne({ email: req.params.email });

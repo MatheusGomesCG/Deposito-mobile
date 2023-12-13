@@ -14,4 +14,8 @@ userRouter.route('/api/user/:email')
 userRouter.route('/api/user/auth')
     .post((req, res) => userController.loginUser(req, res));
 
+userRouter.post('/api/user/recuperar-senha', (req, res) => {
+        userController.recuperarSenha(req, res);
+});
+
 module.exports = userRouter;
