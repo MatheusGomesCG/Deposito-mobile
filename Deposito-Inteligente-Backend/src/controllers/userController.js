@@ -1,4 +1,4 @@
-const UserModel = require('../models/userModel');
+const userModel = require('../models/userModel');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
@@ -9,21 +9,19 @@ const handleError = (res, status, message) => {
 
 const createUser = async (req, res) => {
     try {
-        const { name, email, password} = req.body;
+        const { login, email, password} = req.body;
 
-        if (!name || !email || !password) {
+        if (!login || !email || !password) {
             return res.status(400).json({ message: 'Por favor, preencha todos os campos obrigatórios' });
         }
 
-        // Verifique se o usuário já existe com base no email
         const existingUser = await userModel.findOne({ email });
 
         if (existingUser) {
             return res.status(400).json({ message: 'Já existe um usuário com este email' });
         }
 
-        // Crie um novo usuário
-        const newUser = new userModel({ name, email, password });
+        const newUser = new userModel({ login, email, password });
         await newUser.save();
 
         res.status(201).json({ message: 'Usuário criado com sucesso' });
@@ -36,18 +34,16 @@ const createUser = async (req, res) => {
 const loginUser = async (req, res) => {
     try {
         const { login, password } = req.body;
-        const user = await UserModel.findOne({ login });
+        const user = await userModel.findOne({ login });
 
         if (!user) {
             return handleError(res, 401, 'Usuário não encontrado');
         }
 
-        // Aqui, você deve verificar a senha. Exemplo: se (user.password !== password)
         if (user.password !== password) {
             return handleError(res, 401, 'Senha incorreta');
         }
 
-        // Gerar o token JWT
         const token = jwt.sign({ userId: user._id }, process.env.SECRET, { expiresIn: '1h' });
 
         res.json({ message: 'Login bem-sucedido', token });

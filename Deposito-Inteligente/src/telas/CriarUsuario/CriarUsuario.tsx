@@ -3,7 +3,7 @@ import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 import httpService from '../../../httpService';
 import styles from './Styles';
 
-export const CriarUsuario = ({ navigation }: any) => {
+export const CriarUsuario = () => {
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +14,7 @@ export const CriarUsuario = ({ navigation }: any) => {
       const resposta = await httpService.createUser(data);
 
       if (resposta.ok) {
-        navigation.navigate('Login');
+        Alert.alert('Usuário criado com sucesso!');
       } else {
         const erroData = await resposta.json();
         Alert.alert('Erro', erroData.message);
